@@ -9,12 +9,16 @@ import Html.Events exposing (..)
 
 
 type alias Model =
-    String
+    { puzzle : String
+    , selected : Maybe Char
+    }
 
 
 model : Model
 model =
-    "Spicy jalapeno bacon ipsum dolor amet porchetta ham hock shank filet mignon brisket meatball tongue frankfurter fatback strip steak. Capicola ham bacon pork belly.  The quick brown fox jumped over the lazy dog."
+    { puzzle = "Spicy jalapeno bacon ipsum dolor amet porchetta ham hock shank filet mignon brisket meatball tongue frankfurter fatback strip steak. Capicola ham bacon pork belly.  The quick brown fox jumped over the lazy dog."
+    , selected = Nothing
+    }
 
 
 main : Program Never Model Msg
@@ -28,13 +32,17 @@ main =
 
 type Msg
     = EditPuzzle String
+    | Highlight (Maybe Char)
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         EditPuzzle puzzle ->
-            puzzle
+            { model | puzzle = puzzle }
+
+        Highlight letter ->
+            { model | selected = letter }
 
 
 
@@ -49,14 +57,14 @@ view model =
         ]
 
 
-puzzleInputView : String -> Html Msg
-puzzleInputView puzzleString =
+puzzleInputView : Model -> Html Msg
+puzzleInputView model =
     input
         [ type_ "text"
         , class "form-control puzzle-input"
         , placeholder "Enter the puzzle"
         , onInput (EditPuzzle)
-        , Html.Attributes.value puzzleString
+        , Html.Attributes.value model.puzzle
         ]
         []
 
@@ -65,22 +73,22 @@ puzzleBoardView : Model -> Html Msg
 puzzleBoardView model =
     let
         words =
-            String.split " " model
+            String.split " " model.puzzle
     in
-        div [ class "puzzle-board" ] (List.map (\word -> wordView word) words)
+        div [ class "puzzle-board" ] (List.map (\word -> wordView word model.selected) words)
 
 
-wordView : String -> Html Msg
-wordView word =
+wordView : String -> Maybe Char -> Html Msg
+wordView word selected =
     let
         chars =
             String.toList word
     in
-        div [ class "word" ] (List.map (\char -> charView char) chars)
+        div [ class "word" ] (List.map (\char -> charView char selected) chars)
 
 
-charView : Char -> Html Msg
-charView char =
+charView : Char -> Maybe Char -> Html Msg
+charView char selected =
     let
         displayChar =
             case char of
@@ -89,5 +97,29 @@ charView char =
 
                 _ ->
                     String.fromChar char
+
+        classAttrs =
+            if (anySelected char selected) then
+                [ class "highlight" ]
+            else
+                []
+
+        events =
+            [ onMouseEnter (Highlight (Just char))
+            , onMouseLeave (Highlight Nothing)
+            ]
+
+        attrs =
+            classAttrs ++ events
     in
-        span [] [ text displayChar ]
+        span attrs [ text displayChar ]
+
+
+anySelected : Char -> Maybe Char -> Bool
+anySelected aChar selected =
+    case selected of
+        Just selChar ->
+            (aChar == selChar)
+
+        Nothing ->
+            False
