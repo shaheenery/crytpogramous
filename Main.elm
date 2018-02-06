@@ -59,6 +59,14 @@ view model =
 
 puzzleInputView : Model -> Html Msg
 puzzleInputView model =
+    div [ class "form-row" ]
+        [ div [ class "col-sm-11" ] [ puzzleTexboxView model ]
+        , div [ class "col-sm-1" ] [ puzzleResetView ]
+        ]
+
+
+puzzleTexboxView : Model -> Html Msg
+puzzleTexboxView model =
     input
         [ type_ "text"
         , class "form-control puzzle-input"
@@ -67,6 +75,15 @@ puzzleInputView model =
         , Html.Attributes.value model.puzzle
         ]
         []
+
+
+puzzleResetView : Html Msg
+puzzleResetView =
+    button
+        [ onClick (EditPuzzle "")
+        , class "form-control"
+        ]
+        [ text "Clear" ]
 
 
 puzzleBoardView : Model -> Html Msg
