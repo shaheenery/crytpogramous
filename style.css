@@ -3,7 +3,7 @@
   margin-bottom: 20px;
 }
 
-.puzzle-board span{
+.letter-space{
   border: solid #aba2a2 1px;
   padding: 4px;
   float: left;
@@ -12,7 +12,7 @@
   width: 2em;
   display: block;
   text-align: center;
-  text-transform: capitalize;
+  text-transform: uppercase;
 }
 .word {
   margin-right: 2em;
@@ -20,6 +20,11 @@
   margin-top: 3ex;
 }
 
-.puzzle-board span.highlight {
+.puzzle-board div.highlight {
   background-color: yellow;
+}
+
+.proposed input {
+  text-transform: uppercase;
+  text-align: center;
 }
