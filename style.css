@@ -3,28 +3,72 @@
   margin-bottom: 20px;
 }
 
-.letter-space{
-  border: solid #aba2a2 1px;
-  padding: 4px;
-  float: left;
+.puzzle-board {
+  background-color: #ada8a81f;
   border-radius: 5px;
-  margin: 3px;
-  width: 2em;
-  display: block;
+  padding: 5px;
+}
+
+.letter-space{
+  /* border: solid #aba2a2 1px; */
+  padding: 0.2em .2em 0;
+  float: left;
+  border-radius: 10px;
+  margin: 0px;
+  /* display: block; */
   text-align: center;
   text-transform: uppercase;
 }
+
+.punct-space {
+  float:left;
+  width: 0.2em;
+  /* display: block; */
+  /*font-weight: bold;*/
+  font-size: larger;
+  margin-left: -0.2em;
+}
+
+.punct-space .apos {
+  margin-top: 0em;
+}
+
+.punct-space .period {
+  margin-top: 0.2em;
+}
+
+.punct-space .comma {
+  margin-top: 0.2em;
+  font-weight: normal;
+}
+
+.punct-space .hyphen {
+  margin-top: 0.1em;
+}
+
 .word {
-  margin-right: 2em;
+  margin-right: 1.5em;
   float: left;
-  margin-top: 3ex;
+  margin-top: 1ex;
 }
 
 .puzzle-board div.highlight {
   background-color: yellow;
 }
 
+.proposed {
+  text-align: center;
+}
 .proposed input {
   text-transform: uppercase;
   text-align: center;
+  border: none;
+  border-radius: 5px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.error-look-at-me {
+  border: 3px dashed red;
+  padding: 5px;
 }

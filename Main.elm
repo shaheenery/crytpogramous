@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (..)
 import Dict exposing (..)
+import Char exposing (..)
 
 
 -- MODEL
@@ -26,7 +27,7 @@ alphas =
 
 model : Model
 model =
-    { puzzle = "Spicy jalapeno bacon ipsum dolor amet porchetta ham hock shank filet mignon brisket meatball tongue frankfurter fatback strip steak. Capicola ham bacon pork belly.  The quick brown fox jumped over the lazy dog."
+    { puzzle = String.toUpper "Spicy jalapeno bacon ipsum dolor amet porchetta ham hock shank filet mignon brisket meatball tongue frankfurter fatback strip steak. Capicola ham bacon pork belly.  The quick brown fox jumped over the lazy dog."
     , selected = Nothing
     , mapping = alphas
     , solution = ""
@@ -52,7 +53,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         EditPuzzle puzzle ->
-            { model | puzzle = puzzle }
+            { model | puzzle = (String.toUpper puzzle) }
 
         Highlight letter ->
             { model | selected = letter }
@@ -120,7 +121,7 @@ puzzleBoardView model =
         words =
             String.split " " model.puzzle
     in
-        div [ class "puzzle-board" ] (List.map (\word -> wordView word model.selected model.mapping) words)
+        div [ class "puzzle-board clearfix" ] (List.map (\word -> wordView word model.selected model.mapping) words)
 
 
 wordView : String -> Maybe Char -> Dict Char Char -> Html Msg
@@ -132,12 +133,48 @@ wordView word selected mapping =
         div [ class "word" ] (List.map (\char -> charView char selected mapping) chars)
 
 
+charView : Char -> Maybe Char -> Dict Char Char -> Html Msg
+charView char selected mapping =
+    if Char.isUpper char then
+        letterView char selected mapping
+    else
+        punctView char
+
+
+punctView : Char -> Html Msg
+punctView char =
+    let
+        punctClass =
+            case char of
+                '.' ->
+                    "period"
+
+                ',' ->
+                    "comma"
+
+                '-' ->
+                    "hyphen"
+
+                '\'' ->
+                    "apos"
+
+                '"' ->
+                    "quote"
+
+                _ ->
+                    "error-look-at-me"
+    in
+        div [ class "punct-space" ]
+            [ div [ class punctClass ] [ text (String.fromChar char) ]
+            ]
+
+
 
 --this just feels bad, readability kind of stinks
 
 
-charView : Char -> Maybe Char -> Dict Char Char -> Html Msg
-charView char selected mapping =
+letterView : Char -> Maybe Char -> Dict Char Char -> Html Msg
+letterView char selected mapping =
     let
         displayChar =
             case char of
