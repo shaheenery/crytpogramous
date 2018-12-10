@@ -26,8 +26,8 @@ alphas =
         |> Dict.fromList
 
 
-model : Model
-model =
+initModel : Model
+initModel =
     { puzzle = String.toUpper "PFI: V MPFENTYOHF FVBNHVNP ODW WPFEVCFP SPCVJJQ. NPBPWVYP ZVXVQAWEJY SEYT NWPVY JPWODWIVBAP VBM BD WHBYEIP PGAPJYEDBQ."
     , selected = Nothing
     , mapping = alphas
@@ -36,7 +36,7 @@ model =
 
 
 main =
-    Browser.sandbox { init = model, view = view, update = update }
+    Browser.sandbox { init = initModel, view = view, update = update }
 
 
 
@@ -50,13 +50,13 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg aModel =
+update msg model =
     case msg of
         EditPuzzle puzzle ->
-            { aModel | puzzle = (String.toUpper puzzle) }
+            { model | puzzle = (String.toUpper puzzle) }
 
         Highlight letter ->
-            { aModel | selected = letter }
+            { model | selected = letter }
 
         UpdateMapping letter otherLetter ->
             let
@@ -69,9 +69,9 @@ update msg aModel =
                             ' '
 
                 newDict =
-                    (Dict.insert letter toMap aModel.mapping)
+                    (Dict.insert letter toMap model.mapping)
             in
-                { aModel | mapping = newDict }
+                { model | mapping = newDict }
 
 
 
@@ -79,29 +79,29 @@ update msg aModel =
 
 
 view : Model -> Html Msg
-view theModel =
+view model =
     div []
-        [ puzzleInputView theModel
-        , puzzleBoardView theModel
+        [ puzzleInputView model
+        , puzzleBoardView model
         ]
 
 
 puzzleInputView : Model -> Html Msg
-puzzleInputView myModel =
+puzzleInputView model =
     div [ class "form-row" ]
-        [ div [ class "col-sm-11" ] [ puzzleTexboxView myModel ]
+        [ div [ class "col-sm-11" ] [ puzzleTexboxView model ]
         , div [ class "col-sm-1" ] [ puzzleResetView ]
         ]
 
 
 puzzleTexboxView : Model -> Html Msg
-puzzleTexboxView aModel =
+puzzleTexboxView model =
     input
         [ type_ "text"
         , class "form-control puzzle-input"
         , placeholder "Enter the puzzle"
         , onInput (EditPuzzle)
-        , Attr.value aModel.puzzle
+        , Attr.value model.puzzle
         ]
         []
 
@@ -116,12 +116,12 @@ puzzleResetView =
 
 
 puzzleBoardView : Model -> Html Msg
-puzzleBoardView model_ =
+puzzleBoardView model =
     let
         words =
-            String.split " " model_.puzzle
+            String.split " " model.puzzle
     in
-        div [ class "puzzle-board clearfix" ] (List.map (\word -> wordView word model_.selected model_.mapping) words)
+        div [ class "puzzle-board clearfix" ] (List.map (\word -> wordView word model.selected model.mapping) words)
 
 
 wordView : String -> Maybe Char -> Dict Char Char -> Html Msg

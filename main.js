@@ -4628,7 +4628,7 @@ var author$project$Main$alphas = elm$core$Dict$fromList(
 		},
 		elm$core$String$toList('ABCDEFGHIJKLMNOPQRSTUVWXYZ')));
 var elm$core$String$toUpper = _String_toUpper;
-var author$project$Main$model = {
+var author$project$Main$initModel = {
 	mapping: author$project$Main$alphas,
 	puzzle: elm$core$String$toUpper('PFI: V MPFENTYOHF FVBNHVNP ODW WPFEVCFP SPCVJJQ. NPBPWVYP ZVXVQAWEJY SEYT NWPVY JPWODWIVBAP VBM BD WHBYEIP PGAPJYEDBQ.'),
 	selected: elm$core$Maybe$Nothing,
@@ -4636,19 +4636,19 @@ var author$project$Main$model = {
 };
 var elm$core$String$uncons = _String_uncons;
 var author$project$Main$update = F2(
-	function (msg, aModel) {
+	function (msg, model) {
 		switch (msg.$) {
 			case 'EditPuzzle':
 				var puzzle = msg.a;
 				return _Utils_update(
-					aModel,
+					model,
 					{
 						puzzle: elm$core$String$toUpper(puzzle)
 					});
 			case 'Highlight':
 				var letter = msg.a;
 				return _Utils_update(
-					aModel,
+					model,
 					{selected: letter});
 			default:
 				var letter = msg.a;
@@ -4663,9 +4663,9 @@ var author$project$Main$update = F2(
 						return _Utils_chr(' ');
 					}
 				}();
-				var newDict = A3(elm$core$Dict$insert, letter, toMap, aModel.mapping);
+				var newDict = A3(elm$core$Dict$insert, letter, toMap, model.mapping);
 				return _Utils_update(
-					aModel,
+					model,
 					{mapping: newDict});
 		}
 	});
@@ -5316,8 +5316,8 @@ var author$project$Main$wordView = F3(
 				},
 				chars));
 	});
-var author$project$Main$puzzleBoardView = function (model_) {
-	var words = A2(elm$core$String$split, ' ', model_.puzzle);
+var author$project$Main$puzzleBoardView = function (model) {
+	var words = A2(elm$core$String$split, ' ', model.puzzle);
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
@@ -5327,7 +5327,7 @@ var author$project$Main$puzzleBoardView = function (model_) {
 		A2(
 			elm$core$List$map,
 			function (word) {
-				return A3(author$project$Main$wordView, word, model_.selected, model_.mapping);
+				return A3(author$project$Main$wordView, word, model.selected, model.mapping);
 			},
 			words));
 };
@@ -5354,7 +5354,7 @@ var author$project$Main$puzzleResetView = A2(
 			elm$html$Html$text('Clear')
 		]));
 var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
-var author$project$Main$puzzleTexboxView = function (aModel) {
+var author$project$Main$puzzleTexboxView = function (model) {
 	return A2(
 		elm$html$Html$input,
 		_List_fromArray(
@@ -5363,11 +5363,11 @@ var author$project$Main$puzzleTexboxView = function (aModel) {
 				elm$html$Html$Attributes$class('form-control puzzle-input'),
 				elm$html$Html$Attributes$placeholder('Enter the puzzle'),
 				elm$html$Html$Events$onInput(author$project$Main$EditPuzzle),
-				elm$html$Html$Attributes$value(aModel.puzzle)
+				elm$html$Html$Attributes$value(model.puzzle)
 			]),
 		_List_Nil);
 };
-var author$project$Main$puzzleInputView = function (myModel) {
+var author$project$Main$puzzleInputView = function (model) {
 	return A2(
 		elm$html$Html$div,
 		_List_fromArray(
@@ -5384,7 +5384,7 @@ var author$project$Main$puzzleInputView = function (myModel) {
 					]),
 				_List_fromArray(
 					[
-						author$project$Main$puzzleTexboxView(myModel)
+						author$project$Main$puzzleTexboxView(model)
 					])),
 				A2(
 				elm$html$Html$div,
@@ -5396,14 +5396,14 @@ var author$project$Main$puzzleInputView = function (myModel) {
 					[author$project$Main$puzzleResetView]))
 			]));
 };
-var author$project$Main$view = function (theModel) {
+var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
-				author$project$Main$puzzleInputView(theModel),
-				author$project$Main$puzzleBoardView(theModel)
+				author$project$Main$puzzleInputView(model),
+				author$project$Main$puzzleBoardView(model)
 			]));
 };
 var elm$core$Platform$Cmd$batch = _Platform_batch;
@@ -5655,6 +5655,6 @@ var elm$browser$Browser$sandbox = function (impl) {
 		});
 };
 var author$project$Main$main = elm$browser$Browser$sandbox(
-	{init: author$project$Main$model, update: author$project$Main$update, view: author$project$Main$view});
+	{init: author$project$Main$initModel, update: author$project$Main$update, view: author$project$Main$view});
 _Platform_export({'Main':{'init':author$project$Main$main(
 	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
