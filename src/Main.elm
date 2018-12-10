@@ -1,5 +1,6 @@
 module Main exposing (..)
 
+import Browser exposing (..)
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (..)
@@ -27,16 +28,15 @@ alphas =
 
 model : Model
 model =
-    { puzzle = String.toUpper "Spicy jalapeno bacon ipsum dolor amet porchetta ham hock shank filet mignon brisket meatball tongue frankfurter fatback strip steak. Capicola ham bacon pork belly.  The quick brown fox jumped over the lazy dog."
+    { puzzle = String.toUpper "PFI: V MPFENTYOHF FVBNHVNP ODW WPFEVCFP SPCVJJQ. NPBPWVYP ZVXVQAWEJY SEYT NWPVY JPWODWIVBAP VBM BD WHBYEIP PGAPJYEDBQ."
     , selected = Nothing
     , mapping = alphas
     , solution = ""
     }
 
 
-main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Browser.sandbox { init = model, view = view, update = update }
 
 
 
@@ -50,13 +50,13 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg model =
+update msg aModel =
     case msg of
         EditPuzzle puzzle ->
-            { model | puzzle = (String.toUpper puzzle) }
+            { aModel | puzzle = (String.toUpper puzzle) }
 
         Highlight letter ->
-            { model | selected = letter }
+            { aModel | selected = letter }
 
         UpdateMapping letter otherLetter ->
             let
@@ -69,9 +69,9 @@ update msg model =
                             ' '
 
                 newDict =
-                    (Dict.insert letter toMap model.mapping)
+                    (Dict.insert letter toMap aModel.mapping)
             in
-                { model | mapping = newDict }
+                { aModel | mapping = newDict }
 
 
 
@@ -79,29 +79,29 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
+view theModel =
     div []
-        [ puzzleInputView model
-        , puzzleBoardView model
+        [ puzzleInputView theModel
+        , puzzleBoardView theModel
         ]
 
 
 puzzleInputView : Model -> Html Msg
-puzzleInputView model =
+puzzleInputView myModel =
     div [ class "form-row" ]
-        [ div [ class "col-sm-11" ] [ puzzleTexboxView model ]
+        [ div [ class "col-sm-11" ] [ puzzleTexboxView myModel ]
         , div [ class "col-sm-1" ] [ puzzleResetView ]
         ]
 
 
 puzzleTexboxView : Model -> Html Msg
-puzzleTexboxView model =
+puzzleTexboxView aModel =
     input
         [ type_ "text"
         , class "form-control puzzle-input"
         , placeholder "Enter the puzzle"
         , onInput (EditPuzzle)
-        , Attr.value model.puzzle
+        , Attr.value aModel.puzzle
         ]
         []
 
@@ -116,12 +116,12 @@ puzzleResetView =
 
 
 puzzleBoardView : Model -> Html Msg
-puzzleBoardView model =
+puzzleBoardView model_ =
     let
         words =
-            String.split " " model.puzzle
+            String.split " " model_.puzzle
     in
-        div [ class "puzzle-board clearfix" ] (List.map (\word -> wordView word model.selected model.mapping) words)
+        div [ class "puzzle-board clearfix" ] (List.map (\word -> wordView word model_.selected model_.mapping) words)
 
 
 wordView : String -> Maybe Char -> Dict Char Char -> Html Msg
@@ -160,6 +160,9 @@ punctView char =
 
                 '"' ->
                     "quote"
+
+                ':' ->
+                    "colon"
 
                 _ ->
                     "error-look-at-me"

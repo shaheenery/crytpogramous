@@ -34,9 +34,7 @@
   </div>
 
 </body>
-<script src="/_compile/Main.elm" charset="utf-8"></script>
-<script>
-  const elmDiv = document.querySelector('#elm-container');
-  const elmApp = Elm.Main.embed(elmDiv);
-</script>
+<script src="main.js" charset="utf-8"></script>
+<script>var app = Elm.Main.init({node: document.getElementById("elm-container")
+ });</script>
 </html>
