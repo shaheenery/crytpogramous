@@ -26,9 +26,14 @@ alphas =
         |> Dict.fromList
 
 
+elmTagline : String
+elmTagline =
+    "PFI: V MPFENTYOHF FVBNHVNP ODW WPFEVCFP SPCVJJQ. NPBPWVYP ZVXVQAWEJY SEYT NWPVY JPWODWIVBAP VBM BD WHBYEIP PGAPJYEDBQ."
+
+
 initModel : Model
 initModel =
-    { puzzle = String.toUpper "PFI: V MPFENTYOHF FVBNHVNP ODW WPFEVCFP SPCVJJQ. NPBPWVYP ZVXVQAWEJY SEYT NWPVY JPWODWIVBAP VBM BD WHBYEIP PGAPJYEDBQ."
+    { puzzle = String.toUpper elmTagline
     , selected = Nothing
     , mapping = alphas
     , solution = ""
